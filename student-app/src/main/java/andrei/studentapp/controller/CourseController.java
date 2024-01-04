@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/course")
+@CrossOrigin
 public class CourseController {
 
     @Autowired
@@ -46,6 +47,8 @@ public class CourseController {
             updatedCourse.setCourseName(courseDetails.getCourseName());
             updatedCourse.setCourseDescription(courseDetails.getCourseDescription());
             updatedCourse.setCredits(courseDetails.getCredits());
+            System.out.println(updatedCourse.getPrerequisites());
+            System.out.println(courseDetails.getPrerequisites());
             updatedCourse.setPrerequisites(courseDetails.getPrerequisites());
             return new ResponseEntity<>(courseRepository.save(updatedCourse), HttpStatus.OK);
         } else {

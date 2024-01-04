@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/student")
+@CrossOrigin
 public class StudentController {
 
     @Autowired
@@ -42,9 +43,14 @@ public class StudentController {
         Optional<Student> student = studentRepository.findById(id);
         if (student.isPresent()) {
             Student updatedStudent = student.get();
-            updatedStudent.getPersonalDetails().setFirstName(studentDetails.getPersonalDetails().getLastName());
+            updatedStudent.getPersonalDetails().setFirstName(studentDetails.getPersonalDetails().getFirstName());
             updatedStudent.getPersonalDetails().setLastName(studentDetails.getPersonalDetails().getLastName());
             updatedStudent.getPersonalDetails().setEmail(studentDetails.getPersonalDetails().getEmail());
+            updatedStudent.getPersonalDetails().setDateOfBirth(studentDetails.getPersonalDetails().getDateOfBirth());
+            updatedStudent.getPersonalDetails().setEnrollmentStatus(studentDetails.getPersonalDetails().getEnrollmentStatus());
+            if(studentDetails.getEnrollments() != null){
+                updatedStudent.setEnrollments(studentDetails.getEnrollments());
+            }
             return new ResponseEntity<>(studentRepository.save(updatedStudent), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

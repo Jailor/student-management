@@ -116,12 +116,16 @@ public class StudentAppApplication {
 		courseIds.add(savedCourse.getId());
 
 		// Course 6: Introduction to Programming with Python
+		List<String> prerequisitesForCourse6 = new ArrayList<>();
+		prerequisitesForCourse6.add(course1.getId());
+		prerequisitesForCourse6.add(course2.getId());
+		prerequisitesForCourse6.add(course3.getId());
 		Course course6 = new Course();
 		course6.setCourseCode("ITPP101");
 		course6.setCourseName("Introduction to Programming with Python");
 		course6.setCourseDescription("Fundamentals of programming using Python...");
 		course6.setCredits(4);
-		course6.setPrerequisites(new ArrayList<>());
+		course6.setPrerequisites(prerequisitesForCourse6);
 		savedCourse = courseRepository.save(course6);
 		courseIds.add(savedCourse.getId());
 
@@ -217,8 +221,8 @@ public class StudentAppApplication {
 		Student student6 = new Student();
 		student6.setPersonalDetails(new PersonalDetails("Frank", "Green", "frank.green@example.com", LocalDate.of(2002, 8, 14), EnrollmentStatus.ENROLLED));
 		student6.setEnrollments(List.of(
-				new Enrollment(cs101Id, LocalDate.now(), "ACTIVE"),
-				new Enrollment(math201Id, LocalDate.now(), "ACTIVE"),
+				new Enrollment(cs101Id, LocalDate.now(), "ACTIVE", "A"),
+				new Enrollment(math201Id, LocalDate.now(), "ACTIVE", "B"),
 				new Enrollment(econ101Id, LocalDate.now(), "ACTIVE"),
 				new Enrollment(hist105Id, LocalDate.now(), "ACTIVE")));
 		studentRepository.save(student6);

@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Home from './components/Home';
 import Students from './components/Students';
+import Courses from './components/Courses';
 import styles from './components/project-style.css';
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <Routes>
           <Route path="/home" element={<Home />} />
           <Route path="/students" element={<Students />} />
+          <Route path="/courses" element={<Courses />} />
           <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
       </Router>
