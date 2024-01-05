@@ -1,6 +1,7 @@
 import React from 'react';
 import BackgroundImg from '../background.jpg';
 import { Container } from 'reactstrap';
+import {checkAuthenticationStatus} from './Auth';
 
 const backgroundStyle = {
     backgroundPosition: 'center',
@@ -14,14 +15,17 @@ const backgroundStyle = {
 };
 
 const Home = () => {
+    if (!checkAuthenticationStatus()) {
+        window.location.href = "/login";
+        return <div>Redirecting...</div>;
+    }
     return (
         <div style={backgroundStyle}>
             <Container>
-                <h1 className="display-3">Energy platform</h1>
-                <p className="lead"><b>Welcome user to the energy platform!</b></p>
+                <h1 className="display-3">Student management platform</h1>
+                <p className="lead"><b>Welcome user to the student management platform!</b></p>
                 <hr className="my-2" />
                 <p><b>Use the drop down to navigate to the available menus!</b></p>
-                {/* Additional content */}
             </Container>
         </div>
     );

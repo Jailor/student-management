@@ -1,0 +1,165 @@
+// CRUD students
+Find all students:
+db.students.find({})
+
+Find student by id:
+db.students.find({ "_id": id })
+
+db.students.insert({
+    "_id": student.id,
+    "personalDetails": {
+        "firstName": student.personalDetails.firstName,
+        "lastName": student.personalDetails.lastName,
+        "email": student.personalDetails.email,
+        "dateOfBirth": student.personalDetails.dateOfBirth,
+        "enrollmentStatus": student.personalDetails.enrollmentStatus
+    },
+    "enrollments": student.enrollments.map(enrollment => ({
+        "courseId": enrollment.courseId,
+        "enrollmentDate": enrollment.enrollmentDate,
+        "status": enrollment.status,
+        "grade": enrollment.grade
+    }))
+})
+
+db.students.updateOne(
+    { "_id": id },
+    { 
+        $set: {
+            "personalDetails.firstName": studentDetails.personalDetails.firstName,
+            "personalDetails.lastName": studentDetails.personalDetails.lastName,
+            "personalDetails.email": studentDetails.personalDetails.email,
+            "personalDetails.dateOfBirth": studentDetails.personalDetails.dateOfBirth,
+            "personalDetails.enrollmentStatus": studentDetails.personalDetails.enrollmentStatus,
+            "enrollments": studentDetails.enrollments.map(enrollment => ({
+                "courseId": enrollment.courseId,
+                "enrollmentDate": enrollment.enrollmentDate,
+                "status": enrollment.status,
+                "grade": enrollment.grade
+            }))
+        }
+    }
+)
+
+db.students.deleteOne({ "_id": id })
+
+
+Aggregation to count students by enrollement status:
+db.students.aggregate([
+  { $group: {
+      _id: "$personalDetails.enrollmentStatus",
+      count: { $sum: 1 }
+  }}
+])
+
+
+Find only part of student (projection):
+db.students.find({}, {
+    "personalDetails.firstName": 1,
+    "personalDetails.lastName": 1,
+    "personalDetails.email": 1,
+    "_id": 0
+})
+
+Find all enrolled students:
+db.students.find({
+    "personalDetails.enrollmentStatus": "ENROLLED"
+})
+
+
+
+
+// CRUD Courses
+
+Get All Courses (getAllCourses()):
+db.courses.find({})
+This query retrieves all documents from the courses collection.
+
+
+Get Course By ID (getCourseById(String id)):
+db.courses.findOne({ "_id": id })
+This query finds a single document in the courses collection where the _id field matches the specified id.
+
+
+Create Course (createCourse(Course course)):
+db.courses.insert({
+    "_id": course.id, // Auto-generated if not provided
+    "courseCode": course.courseCode,
+    "courseName": course.courseName,
+    "courseDescription": course.courseDescription,
+    "credits": course.credits,
+    "prerequisites": course.prerequisites // Array of course IDs
+})
+This query inserts a new document into the courses collection with the provided course details.
+
+
+Update Course (updateCourse(String id, Course courseDetails)):
+db.courses.updateOne(
+    { "_id": id },
+    { 
+        $set: {
+            "courseCode": courseDetails.courseCode,
+            "courseName": courseDetails.courseName,
+            "courseDescription": courseDetails.courseDescription,
+            "credits": courseDetails.credits,
+            "prerequisites": courseDetails.prerequisites
+        }
+    }
+)
+This query updates the document in the courses collection where the
+ _id matches the specified id. It sets the new values for courseCode, courseName, courseDescription, credits, and prerequisites.
+
+
+Delete Course (deleteCourse(String id)):
+db.courses.deleteOne({ "_id": id })
+This query removes the document from the courses collection where the _id matches the specified id.
+
+
+// CRUD Users
+
+Get All Users (getAllUsers()):
+db.users.find({})
+This query fetches all documents from the users collection.
+
+
+Get User By ID (getUserById(String id)):
+db.users.findOne({ "_id": ObjectId(id) })
+Retrieves a single user document where the _id matches the specified id.
+
+
+Create User (createUser(User user)):
+db.users.insert({
+    "_id": user.id, // Auto-generated if not provided
+    "username": user.username,
+    "name": user.name,
+    "password": user.password,
+    "role": user.role
+})
+Inserts a new user document into the users collection. MongoDB will automatically handle unique index constraint for the username.
+
+
+Update User (updateUser(String id, User userDetails)):
+db.users.updateOne(
+    { "_id": ObjectId(id) },
+    { 
+        $set: {
+            "username": userDetails.username,
+            "name": userDetails.name,
+            "password": userDetails.password,
+            "role": userDetails.role
+        }
+    }
+)
+Updates the user document in the users collection where the _id matches the specified id with the new details. 
+Handles unique index constraint for the username.
+
+
+Delete User (deleteUser(String id)):
+db.users.deleteOne({ "_id": ObjectId(id) })
+Removes the user document from the users collection where the _id matches the specified id.
+
+db.users.createIndex({ "username": 1 }, { unique: true })
+
+db.createCollection("users")
+db.createCollection("students")
+db.createCollection("courses")

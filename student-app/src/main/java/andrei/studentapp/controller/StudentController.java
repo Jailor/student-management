@@ -1,6 +1,9 @@
 package andrei.studentapp.controller;
 
+import andrei.studentapp.model.EnrollmentStatus;
 import andrei.studentapp.model.Student;
+import andrei.studentapp.repository.StudentAggregateRepository;
+import andrei.studentapp.repository.StudentNameEmailProjection;
 import andrei.studentapp.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -17,6 +21,9 @@ public class StudentController {
 
     @Autowired
     private StudentRepository studentRepository;
+
+    @Autowired
+    private StudentAggregateRepository studentAggregateRepository;
 
     @GetMapping
     public List<Student> getAllStudents() {
@@ -65,5 +72,20 @@ public class StudentController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("/projected")
+    public List<StudentNameEmailProjection> getAllProjectedStudents() {
+        return studentRepository.findAllProjectedBy();
+    }
+
+    @GetMapping("/status/{status}")
+    public List<Student> getStudentsByEnrollmentStatus(@PathVariable EnrollmentStatus status) {
+        return studentRepository.findByPersonalDetails_EnrollmentStatus(status);
+    }
+
+    @GetMapping("/countByStatus")
+    public Map<String, Long> countStudentsByEnrollmentStatus() {
+        return studentAggregateRepository.countStudentsByEnrollmentStatus();
     }
 }

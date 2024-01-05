@@ -5,16 +5,18 @@ import Select from 'react-select';
 import { Container, Table, Button, Form, FormGroup, Label, Input, Row, Col, Card, CardHeader } from 'reactstrap';
 import CourseService from './CourseService'; // Import your CourseService
 import '../App.css';
+import {checkAuthenticationStatus} from './Auth';
+
 
 const Courses = () => {
+    const authResult = checkAuthenticationStatus();
+
     const [courses, setCourses] = useState([]);
     const [selectedCourse, setSelectedCourse] = useState(null);
     const [courseNameMapping, setCourseNameMapping] = useState({});
     const [courseOptions, setCourseOptions] = useState([]);
 
     const { register, handleSubmit, reset, control, setValue } = useForm();
-
-
 
     const fetchCourses = () => {
         CourseService.getAllCourses()
@@ -32,10 +34,18 @@ const Courses = () => {
     };
 
     useEffect(() => {
+        if (!authResult) {
+            return;
+        }
+
         fetchCourses();
     }, []);
 
     useEffect(() => {
+        if (!authResult) {
+            return;
+        }
+
         // Create options for multi-select dropdown
         const options = courses.map(course => ({
             value: course.id,
@@ -132,6 +142,11 @@ const Courses = () => {
     };
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data: courses });
+
+    if (!authResult) {
+        window.location.href = "/login";
+        return <div>Redirecting...</div>;
+    }
 
     return (
         <Container>

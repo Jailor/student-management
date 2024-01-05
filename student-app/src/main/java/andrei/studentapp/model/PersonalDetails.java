@@ -12,13 +12,13 @@ public class PersonalDetails {
     private String lastName;
     private String email;
     private LocalDate dateOfBirth;
-    private EnrollmentStatus enrollmentStatus;
+    private String enrollmentStatus;
 
     public PersonalDetails() {
         super();
     }
 
-    public PersonalDetails(String firstName, String lastName, String email, LocalDate dateOfBirth, EnrollmentStatus enrollmentStatus) {
+    public PersonalDetails(String firstName, String lastName, String email, LocalDate dateOfBirth, String enrollmentStatus) {
         super();
         this.firstName = firstName;
         this.lastName = lastName;

@@ -4,6 +4,7 @@ import andrei.studentapp.model.*;
 import andrei.studentapp.repository.CourseRepository;
 import andrei.studentapp.repository.StudentNameEmailProjection;
 import andrei.studentapp.repository.StudentRepository;
+import andrei.studentapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -29,6 +30,9 @@ public class StudentAppApplication {
 	@Autowired
 	private CourseRepository courseRepository;
 
+	@Autowired
+	private UserRepository userRepository;
+
 	@Bean
 	public CommandLineRunner defaultSimulationRunner() {
 		return args -> run();
@@ -37,6 +41,7 @@ public class StudentAppApplication {
 	public void run() {
 		studentRepository.deleteAll();
 		courseRepository.deleteAll();
+		userRepository.deleteAll();
 
 		System.out.println("----- Initialize Student Database -----");
 
@@ -45,8 +50,38 @@ public class StudentAppApplication {
 		System.out.println("----- Display Student Emails -----");
 		displayStudentEmails();
 
+		System.out.println("----- Create Users -----");
+		createUsers();
+
 	}
 
+
+
+	public void createUsers() {
+		System.out.println("Creating users...");
+		User user1 = new User();
+		user1.setUsername("admin");
+		user1.setPassword("admin");
+		user1.setRole("ADMIN");
+		user1.setName("Admin User");
+		userRepository.save(user1);
+
+		User user2 = new User();
+		user2.setUsername("student");
+		user2.setPassword("student");
+		user2.setRole("STUDENT");
+		user2.setName("Student User");
+		userRepository.save(user2);
+
+		User user3 = new User();
+		user3.setUsername("andrei_pelle");
+		user3.setPassword("andrei_pelle");
+		user3.setRole("ADMIN");
+		user3.setName("Andrei Pelle");
+		userRepository.save(user3);
+
+		System.out.println("Users created.");
+	}
 
 	public void displayStudentEmails() {
 		List<StudentNameEmailProjection> students = studentRepository.findAllProjectedBy();
@@ -189,37 +224,37 @@ public class StudentAppApplication {
 
 		// Create student 1
 		Student student1 = new Student();
-		student1.setPersonalDetails(new PersonalDetails("Alice", "Johnson", "alice.johnson@example.com", LocalDate.of(2000, 3, 15), EnrollmentStatus.ENROLLED));
+		student1.setPersonalDetails(new PersonalDetails("Alice", "Johnson", "alice.johnson@example.com", LocalDate.of(2000, 3, 15),"ENROLLED"));
 		student1.setEnrollments(List.of(new Enrollment(cs101Id, LocalDate.now(), "ACTIVE")));
 		studentRepository.save(student1);
 
 		// Create student 2
 		Student student2 = new Student();
-		student2.setPersonalDetails(new PersonalDetails("Bob", "Smith", "bob.smith@example.com", LocalDate.of(2001, 7, 22), EnrollmentStatus.ENROLLED));
+		student2.setPersonalDetails(new PersonalDetails("Bob", "Smith", "bob.smith@example.com", LocalDate.of(2001, 7, 22), "ENROLLED"));
 		student2.setEnrollments(List.of(new Enrollment(math201Id, LocalDate.now(), "ACTIVE")));
 		studentRepository.save(student2);
 
 		// Create student 3
 		Student student3 = new Student();
-		student3.setPersonalDetails(new PersonalDetails("Carol", "Williams", "carol.williams@example.com", LocalDate.of(1999, 11, 8), EnrollmentStatus.ON_LEAVE));
+		student3.setPersonalDetails(new PersonalDetails("Carol", "Williams", "carol.williams@example.com", LocalDate.of(1999, 11, 8), "ON_LEAVE"));
 		student3.setEnrollments(Arrays.asList(new Enrollment(cs101Id, LocalDate.now(), "ACTIVE"), new Enrollment(math201Id, LocalDate.now(), "ACTIVE")));
 		studentRepository.save(student3);
 
 		// Create student 4
 		Student student4 = new Student();
-		student4.setPersonalDetails(new PersonalDetails("Dave", "Brown", "dave.brown@example.com", LocalDate.of(2002, 1, 30), EnrollmentStatus.ENROLLED));
+		student4.setPersonalDetails(new PersonalDetails("Dave", "Brown", "dave.brown@example.com", LocalDate.of(2002, 1, 30), "ENROLLED"));
 		student4.setEnrollments(List.of(new Enrollment(cs101Id, LocalDate.now(), "ACTIVE")));
 		studentRepository.save(student4);
 
 		// Create student 5
 		Student student5 = new Student();
-		student5.setPersonalDetails(new PersonalDetails("Eve", "Miller", "eve.miller@example.com", LocalDate.of(2000, 5, 17), EnrollmentStatus.SUSPENDED));
+		student5.setPersonalDetails(new PersonalDetails("Eve", "Miller", "eve.miller@example.com", LocalDate.of(2000, 5, 17), "SUSPENDED"));
 		student5.setEnrollments(new ArrayList<>()); // Assuming no active enrollments due to suspended status
 		studentRepository.save(student5);
 
 		// Create student 6
 		Student student6 = new Student();
-		student6.setPersonalDetails(new PersonalDetails("Frank", "Green", "frank.green@example.com", LocalDate.of(2002, 8, 14), EnrollmentStatus.ENROLLED));
+		student6.setPersonalDetails(new PersonalDetails("Frank", "Green", "frank.green@example.com", LocalDate.of(2002, 8, 14), "ENROLLED"));
 		student6.setEnrollments(List.of(
 				new Enrollment(cs101Id, LocalDate.now(), "ACTIVE", "A"),
 				new Enrollment(math201Id, LocalDate.now(), "ACTIVE", "B"),
@@ -229,13 +264,14 @@ public class StudentAppApplication {
 
 		// Create student 7
 		Student student7 = new Student();
-		student7.setPersonalDetails(new PersonalDetails("Grace", "Hall", "grace.hall@example.com", LocalDate.of(2001, 9, 19), EnrollmentStatus.ENROLLED));
+		student7.setPersonalDetails(new PersonalDetails("Grace", "Hall", "grace.hall@example.com", LocalDate.of(2001, 9, 19),"ENROLLED"));
 		student7.setEnrollments(List.of(new Enrollment(math201Id, LocalDate.now(), "ACTIVE")));
 		studentRepository.save(student7);
 
 		// Create student 8
 		Student student8 = new Student();
-		student8.setPersonalDetails(new PersonalDetails("Henry", "Adams", "henry.adams@example.com", LocalDate.of(2000, 12, 5), EnrollmentStatus.GRADUATED));
+		student8.setPersonalDetails(new PersonalDetails("Henry", "Adams", "henry.adams@example.com", LocalDate.of(2000, 12, 5), "GRADUATED"));
+
 		student8.setEnrollments(new ArrayList<>()); // No active enrollments for graduated students
 		studentRepository.save(student8);
 

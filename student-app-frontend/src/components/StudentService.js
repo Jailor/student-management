@@ -21,7 +21,19 @@ const StudentService = {
 
     deleteStudent: function(id) {
         return axios.delete(`${API_URL}/${id}`);
+    },
+
+    getProjectedStudents: function() {
+        return axios.get(`${API_URL}/projected`);
+    },
+    getStudentsByStatus: function(status) {
+        return axios.get(`${API_URL}/status/${status}`);
     }
+    ,
+    getStudentCountByStatus: function() {
+        return axios.get(`${API_URL}/countByStatus`);
+    }
+
 };
 
 export default StudentService;
