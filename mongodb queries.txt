@@ -163,3 +163,80 @@ db.users.createIndex({ "username": 1 }, { unique: true })
 db.createCollection("users")
 db.createCollection("students")
 db.createCollection("courses")
+
+
+
+
+
+
+View
+
+db.students.aggregate([
+    {
+        $unwind: "$enrollments"
+    },
+    {
+        $lookup: {
+            from: "courses",
+            localField: "enrollments.courseId",
+            foreignField: "_id",
+            as: "courseDetails"
+        }
+    },
+    {
+        $unwind: "$courseDetails"
+    },
+    {
+        $group: {
+            _id: "$_id",
+            personalDetails: { $first: "$personalDetails" },
+            courses: {
+                $push: {
+                    courseCode: "$courseDetails.courseCode",
+                    courseName: "$courseDetails.courseName",
+                    courseDescription: "$courseDetails.courseDescription",
+                    credits: "$courseDetails.credits",
+                    grade: "$enrollments.grade",
+                    status: "$enrollments.status",
+                    enrollmentDate: "$enrollments.enrollmentDate"
+                }
+            }
+        }
+    }
+])
+
+
+The actual view:
+db.createView("student_course_view", "students", [
+    {
+        $unwind: "$enrollments"
+    },
+    {
+        $lookup: {
+            from: "courses",
+            localField: "enrollments.courseId",
+            foreignField: "_id",
+            as: "courseDetails"
+        }
+    },
+    {
+        $unwind: "$courseDetails"
+    },
+    {
+        $group: {
+            _id: "$_id",
+            personalDetails: { $first: "$personalDetails" },
+            courses: {
+                $push: {
+                    courseCode: "$courseDetails.courseCode",
+                    courseName: "$courseDetails.courseName",
+                    courseDescription: "$courseDetails.courseDescription",
+                    credits: "$courseDetails.credits",
+                    grade: "$enrollments.grade",
+                    status: "$enrollments.status",
+                    enrollmentDate: "$enrollments.enrollmentDate"
+                }
+            }
+        }
+    }
+])
